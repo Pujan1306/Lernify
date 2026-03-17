@@ -1,20 +1,35 @@
 import fs from "fs/promises";
 import { PDFParse } from "pdf-parse";
-import Tesseract from "tesseract.js";
 import path from "path";
 import os from "os";
 import { createRequire } from "module";
 import { pathToFileURL } from "url";
-import sharp from "sharp";
-import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
-import { createCanvas } from "canvas"; 
+
+// Try to import canvas, but handle failure gracefully
+let createCanvas;
+try {
+  const canvasModule = await import("canvas");
+  createCanvas = canvasModule.createCanvas;
+} catch (error) {
+  console.warn("Canvas module not available, OCR functionality disabled");
+}
 
 const require = createRequire(import.meta.url);
 const pdfjsDistPath = path.dirname(require.resolve("pdfjs-dist/package.json"));
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = pathToFileURL(
-  path.join(pdfjsDistPath, "legacy/build/pdf.worker.mjs")
-).href;
+// Try to import other optional dependencies
+let Tesseract, sharp, pdfjsLib;
+try {
+  Tesseract = await import("tesseract.js");
+  sharp = await import("sharp");
+  pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
+  
+  pdfjsLib.GlobalWorkerOptions.workerSrc = pathToFileURL(
+    path.join(pdfjsDistPath, "legacy/build/pdf.worker.mjs")
+  ).href;
+} catch (error) {
+  console.warn("Optional OCR dependencies not available");
+}
 
 const extractTextFromPDF = async (filePath) => {
   const dataBuffer = await fs.readFile(filePath);
@@ -28,6 +43,17 @@ const extractTextFromPDF = async (filePath) => {
 };
 
 const getPageCount = async (filePath) => {
+  if (!pdfjsLib) {
+    // Fallback: try to extract text and estimate pages
+    try {
+      const { text } = await extractTextFromPDF(filePath);
+      // Rough estimate: assume 1 page per 2000 characters
+      return Math.max(1, Math.ceil(text.length / 2000));
+    } catch (error) {
+      return 1; // Default to 1 page if all else fails
+    }
+  }
+
   const dataBuffer = await fs.readFile(filePath);
   const pdfDoc = await pdfjsLib
     .getDocument({
@@ -40,6 +66,10 @@ const getPageCount = async (filePath) => {
 };
 
 const extractTextViaOCR = async (filePath, numPages) => {
+  if (!createCanvas || !Tesseract || !sharp || !pdfjsLib) {
+    throw new Error("OCR dependencies not available. Please install canvas, tesseract.js, sharp, and pdfjs-dist for OCR functionality.");
+  }
+
   const dataBuffer = await fs.readFile(filePath);
   const pdfDoc = await pdfjsLib.getDocument({
     data: new Uint8Array(dataBuffer),
@@ -117,6 +147,12 @@ export const pdfParser = async (filePath) => {
 
     if (isTextMeaningful(text, numPages)) {
       return { text, numPages, info, method: "text" };
+    }
+
+    // If OCR dependencies are not available, return the extracted text anyway
+    if (!createCanvas || !Tesseract || !sharp || !pdfjsLib) {
+      console.warn("[pdfParser] OCR dependencies not available, returning basic text extraction");
+      return { text, numPages, info, method: "text-basic" };
     }
 
     console.log("[pdfParser] Falling back to high-strength OCR...");
