@@ -7,5 +7,7 @@ export const ENV = {
     MONGODB_URI: process.env.MONGODB_URI,
     CLIENT_ID: process.env.CLIENT_ID,
     CLIENT_SECRET: process.env.CLIENT_SECRET,
+    FRONTEND_URL: process.env.FRONTEND_URL,
+    BACKEND_URL: process.env.BACKEND_URL,
 }
 

@@ -59,7 +59,7 @@ export default function Benefits() {
               </div>
               <h2 className="text-3xl md:text-5xl font-display uppercase tracking-wider text-white mb-6 leading-tight">
                 Unlock Your <br className="hidden md:block" />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-emerald-400 to-amber-400">Full Potential</span>
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-400 via-emerald-400 to-amber-400">Full Potential</span>
               </h2>
               <p className="text-slate-400 text-lg mb-10 max-w-xl">
                 Experience a new way of learning. Our platform provides the tools you need to maximize your study efficiency and achieve your goals faster.
@@ -81,11 +81,11 @@ export default function Benefits() {
           {/* Right Image */}
           <div className="benefits-image opacity-0 relative">
             {/* Background Glow */}
-            <div className="absolute -inset-4 bg-gradient-to-tr from-primary/20 to-blue-500/20 blur-3xl rounded-full opacity-50"></div>
+            <div className="absolute -inset-4 bg-linear-to-t from-primary/20 to-blue-500/20 blur-3xl rounded-full opacity-50"></div>
             
             {/* Main Image Container */}
             <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl group">
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0c10] via-transparent to-transparent opacity-60 z-10"></div>
+              <div className="absolute inset-0 bg-linear-to-t from-[#0a0c10] via-transparent to-transparent opacity-60 z-10"></div>
               <img 
                 src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop" 
                 alt="Student studying on laptop" 

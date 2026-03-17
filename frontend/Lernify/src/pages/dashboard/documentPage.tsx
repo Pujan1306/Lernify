@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, FileText, BookOpen, BrainCircuit, Clock, Trash2, Upload } from 'lucide-react';
+import { Plus, FileText, BookOpen, BrainCircuit, Trash2, Upload } from 'lucide-react';
 import Dialog from '../../components/dialog';
 import { documentService } from '../../services/documentService';
 import { sileo } from 'sileo';

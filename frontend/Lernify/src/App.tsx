@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate} from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import ProtectRoute from "./middleware/protectRoute";
-import { MyComponent } from "./components/test";
 import LoginPage from "./pages/auth/loginPage";
 import Signup from "./pages/auth/signupPage";
 import { useAuth } from "./context/AuthContext";

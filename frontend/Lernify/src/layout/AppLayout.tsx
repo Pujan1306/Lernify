@@ -1,5 +1,5 @@
 import { useState } from 'react';;
-import { Menu, Bell, User as UserIcon } from 'lucide-react';
+import { Menu, User as UserIcon } from 'lucide-react';
 import Sidebar from '../components/sidebar'
 import { useAuth } from '../context/AuthContext';
 import { ModeToggle } from '../components/theme-toggler';

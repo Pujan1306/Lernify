@@ -10,6 +10,9 @@ import aiRoute from "./routes/aiRoutes.js";
 import quizRoute from "./routes/quizRoute.js";
 import progressRoute from "./routes/progressRoute.js";
 import dns from "node:dns";
+import path from "path";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 import "./lib/passport.js"
 dns.setDefaultResultOrder('ipv4first');
 const app = express()
@@ -18,7 +21,7 @@ const port = ENV.PORT
 
 app.set('trust proxy', true)
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: ENV.FRONTEND_URL,
     credentials: true
 }))
 app.use(express.json())
@@ -42,6 +45,16 @@ app.use("/api/progress", progressRoute)
 app.use((req, res) => {
     res.status(404).json({success: false, message: "Route not found", statusCode: 404})
 })
+
+// Serve static files in production
+if (process.env.NODE_ENV === 'production') {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  app.use(express.static(path.join(__dirname, '../frontend/dist')));
+  app.get(/.*/, (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+  });
+}
 
 app.listen(port, async () => {
     await dbConnect()
