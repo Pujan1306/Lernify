@@ -31,14 +31,6 @@ export const GoogleCallbackController = (req, res, next) => {
 
         const token = setToken(user);
 
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "none",
-            maxAge: 24 * 60 * 60 * 1000,
-            domain: ".onrender.com"
-        });
-
         const safeUser = {
             id: user._id,
             name: user.name,
@@ -48,7 +40,8 @@ export const GoogleCallbackController = (req, res, next) => {
 
         sendPopupMessage(res, {
             type: "GOOGLE_AUTH_SUCCESS",
-            user: safeUser
+            user: safeUser,
+            token: token
         });
 
     })(req, res, next);

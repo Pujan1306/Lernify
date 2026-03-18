@@ -40,15 +40,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (user) {
         console.log("User already authenticated");
       } else {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          setUser(null);
+          return;
+        }
+
         const response = await authService.getProfile();
         if (response.success) {
           setUser(response.user);
         } else {
           setUser(null);
+          localStorage.removeItem("token");
         }
       }
     } catch (error) {
       setUser(null);
+      localStorage.removeItem("token");
     } finally {
       setIsLoading(false);
     }

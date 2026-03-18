@@ -31,14 +31,8 @@ export const LoginController = async (req, res) => {
         const user = await UserModel.findById(emailExist._id);
 
         const token = await setToken(user);
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-            maxAge: 24 * 60 * 60 * 1000
-        });
-
-        res.status(200).json({ success: true, message: "User logged in successfully"});
+        
+        res.status(200).json({ success: true, message: "User logged in successfully", token });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message || "Internal server error" });
         console.log(error);

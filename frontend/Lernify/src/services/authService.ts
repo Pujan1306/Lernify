@@ -6,6 +6,9 @@ import type { ApiResponse } from "../types/ApiResponse";
 const login = async (email: string, password: string) => {
     try {
         const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, { email, password });
+        if (response.data.token) {
+            localStorage.setItem("token", response.data.token);
+        }
         return response.data;
     } catch (error) {
         const errorMessage = error as AxiosError<ApiResponse>
@@ -89,6 +92,9 @@ const googleAuth = () => {
     const messageListener = (event: MessageEvent) => {
       if (event.source !== popup) return;
       if (event.data?.type === "GOOGLE_AUTH_SUCCESS") {
+        if (event.data.token) {
+            localStorage.setItem("token", event.data.token);
+        }
         cleanup();
         resolve();
       }
@@ -111,7 +117,6 @@ const logout = async () => {
         await axiosInstance.post(API_PATHS.AUTH.LOGOUT);
         localStorage.removeItem("token");
     } catch (error: any) {
-        localStorage.removeItem("token");
         const errorMessage = error.response?.data?.message || error.message || "Logout failed";
          throw new Error(errorMessage.response?.data?.message || "An unknown error occurred");
     } 
