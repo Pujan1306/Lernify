@@ -15,6 +15,7 @@ A modern learning platform that transforms study materials into interactive AI-p
 ## 🛠 Tech Stack
 
 ### Frontend
+
 - **React 19** with TypeScript
 - **Vite** as build tool
 - **Tailwind CSS** for styling
@@ -248,4 +249,4 @@ The project is actively being developed with regular updates and new features. C
 
 ---
 
-**Built with ❤️ for learners everywhere**
+**Built with for learners everywhere**
