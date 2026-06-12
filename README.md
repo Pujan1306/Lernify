@@ -212,10 +212,6 @@ npm test         # Run tests
 4. Push to branch: `git push origin feature-name`
 5. Submit a pull request
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 🆘 Troubleshooting
 
 ### Common Issues
