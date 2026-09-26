@@ -5,11 +5,12 @@ import { setToken } from "../../lib/jwt.js";
 
 
 const sendPopupMessage = (res, payload) => {
+    const frontendOrigin = process.env.FRONTEND_URL || process.env.RENDER_EXTERNAL_URL || "http://localhost:5173";
     res.send(`
         <script>
             window.opener.postMessage(
                 ${JSON.stringify(payload)},
-                '${process.env.FRONTEND_URL || "http://localhost:5173"}'
+                '${frontendOrigin}'
             );
             window.close();
         </script>

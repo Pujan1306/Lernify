@@ -6,7 +6,8 @@ import { ENV } from "./env.js";
 passport.use(new GoogleStrategy({
     clientID: ENV.CLIENT_ID,
     clientSecret: ENV.CLIENT_SECRET,
-    callbackURL: `${ENV.BACKEND_URL}/api/auth/google/callback`
+    // Prefer explicit BACKEND_URL; fall back to Render's auto-injected external URL
+    callbackURL: `${ENV.BACKEND_URL || process.env.RENDER_EXTERNAL_URL || "http://localhost:3000"}/api/auth/google/callback`
 }, 
 async (_, __, profile, done) => {
     try {
