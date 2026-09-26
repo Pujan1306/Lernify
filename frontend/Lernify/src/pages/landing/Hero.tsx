@@ -50,7 +50,7 @@ export default function Hero() {
         <div className="hero-badge flex items-center justify-center gap-3 mb-8 opacity-0">
           <span className="w-1 h-1 rounded-full bg-primary" />
           <span className="text-[10px] md:text-xs font-mono tracking-[0.15em] text-white/70 uppercase">
-            AI Infrastructure for Builders
+            AI Learner for Students
           </span>
           <span className="w-1 h-1 rounded-full bg-primary" />
         </div>

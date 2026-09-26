@@ -74,11 +74,11 @@ Create `.env` file in `backend/`:
 
 ```env
 PORT=3000
-JWT_SECRET=JisG21$BsdYrnBz5jh%34asDEtF43@==
-MONGODB_URI=mongodb://pujanmestry_db_user:kTBXCNJKN943NBdp@ac-uzh5afd-shard-00-00.2yknuh7.mongodb.net:27017,ac-uzh5afd-shard-00-01.2yknuh7.mongodb.net:27017,ac-uzh5afd-shard-00-02.2yknuh7.mongodb.net:27017/myDatabaseName?ssl=true&authSource=admin&retryWrites=true&w=majority
-GEMINI_API_KEY=AIzaSyDT-OV9z2fCF6LJxwXFfVjhrXTzRQ24w_I
-CLIENT_ID=629033897800-kkghde3kpho3trphlhjipokvc26o0nna.apps.googleusercontent.com
-CLIENT_SECRET=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
+JWT_SECRET= Random_JWT_Secret
+MONGODB_URI= MongoDB_URL
+GEMINI_API_KEY=
+CLIENT_ID=
+CLIENT_SECRET=
 FRONTEND_URL=http://localhost:5173
 NODE_ENV=development
 ```

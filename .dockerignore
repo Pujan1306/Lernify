@@ -1,0 +1,29 @@
+# Dependencies
+node_modules
+**/node_modules
+frontend/Lernify/node_modules
+backend/node_modules
+
+# Build outputs (rebuilt inside Docker)
+frontend/Lernify/dist
+backend/public
+
+# Git & repo metadata
+.git
+.gitignore
+.freebuff
+
+# Env files — never bake secrets into images
+.env
+**/.env
+backend/.env
+frontend/Lernify/.env
+
+# Uploads (runtime data, not baked into image)
+backend/src/uploads
+
+# Docs & IDE
+README.md
+*.md
+.vscode
+.idea

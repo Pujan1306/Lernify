@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 export const protectRoute = (req, res, next) => {
     const authHeader = req.headers.authorization;
-    
+
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
         console.log("No token found in Authorization header");
         return res.status(401).json({ success: false, message: "No token provided" });

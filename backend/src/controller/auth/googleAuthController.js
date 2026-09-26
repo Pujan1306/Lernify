@@ -47,4 +47,3 @@ export const GoogleCallbackController = (req, res, next) => {
     })(req, res, next);
 
 };
-
