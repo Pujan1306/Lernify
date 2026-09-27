@@ -6,6 +6,7 @@ import { BrainCircuit, Mail, Lock, ArrowRight, Eye, EyeOff, User } from 'lucide-
 import { Link, useNavigate } from 'react-router-dom';
 import { authService } from '../../services/authService';
 import { sileo } from 'sileo';
+import { useAuth } from '../../context/AuthContext';
 
 const registerSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -19,6 +20,7 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const navigate = useNavigate();
+  const { checkAuth } = useAuth();
 
   const {
     register,
@@ -48,9 +50,10 @@ export default function Signup() {
     setIsGoogleLoading(true);
     try {
       await authService.googleAuth();
-      console.log("Google auth initiated");
+      await checkAuth();
+      navigate('/dashboard');
     } catch (error: any) {
-      console.error("Google auth error:", error.message);
+      sileo.error({ title: "Google Auth Failed", description: error.message });
     } finally {
       setIsGoogleLoading(false);
     }

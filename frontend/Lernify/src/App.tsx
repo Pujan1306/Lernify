@@ -16,9 +16,11 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-3 items-center justify-center h-screen">
-        <Loader2 className="h-6 w-6 animate-spin" />
-      </div>
+      <Router>
+        <div className="flex flex-col gap-3 items-center justify-center h-screen">
+          <Loader2 className="h-6 w-6 animate-spin" />
+        </div>
+      </Router>
     );
   }
   return (

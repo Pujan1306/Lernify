@@ -9,6 +9,7 @@ A modern learning platform that transforms study materials into interactive AI-p
 - **Smart Quizzes**: AI creates personalized quizzes from your content
 - **Progress Dashboard**: Track your learning journey with detailed analytics
 - **AI Chat**: Get help with your study materials through AI-powered conversations
+- **AI Provider**: xKiro API (OpenAI-compatible) with automatic model fallback
 - **Dark/Light Mode**: Modern UI with theme switching
 - **Responsive Design**: Works seamlessly on all devices
 
@@ -30,14 +31,14 @@ A modern learning platform that transforms study materials into interactive AI-p
 - **MongoDB** with Mongoose
 - **JWT** for authentication
 - **Google OAuth** for social login
-- **Gemini AI** for AI features
+- **xKiro API** (OpenAI-compatible) for AI features
 
 ## 📋 Prerequisites
 
 - Node.js 18+ 
 - MongoDB
-- Google Cloud Project (for Gemini API)
-- Google OAuth credentials
+- xKiro API key (for AI features)
+- Google Cloud Project (for OAuth)
 
 ## 🚀 Quick Start
 
@@ -76,10 +77,11 @@ Create `.env` file in `backend/`:
 PORT=3000
 JWT_SECRET= Random_JWT_Secret
 MONGODB_URI= MongoDB_URL
-GEMINI_API_KEY=
+XKIRO_API_KEY=
 CLIENT_ID=
 CLIENT_SECRET=
 FRONTEND_URL=http://localhost:5173
+BACKEND_URL=http://localhost:3000
 NODE_ENV=development
 ```
 
@@ -134,11 +136,13 @@ The app supports two authentication methods:
 
 ## 🤖 AI Features
 
-### Gemini AI Integration
+### AI Integration (xKiro)
 - **Document Analysis**: AI analyzes uploaded documents to extract key concepts
 - **Flashcard Generation**: Automatically creates question-answer pairs from content
 - **Quiz Creation**: Generates multiple-choice questions based on document content
 - **AI Chat**: Interactive chat to help with study materials
+
+> Powered by xKiro (`https://api.xkiro.com/v1`) via the OpenAI SDK — primary model `qwen/qwen3.8-omni-flash:free` with automatic fallbacks.
 
 ## 📊 Key Features in Detail
 
@@ -194,16 +198,28 @@ npm test         # Run tests
 
 ## 🚀 Deployment
 
-### Frontend (Vercel/Netlify)
-1. Build the project: `npm run build`
-2. Deploy the `dist` folder
-3. Set environment variables in hosting platform
+The whole app (frontend + backend) runs as **one service**. A multi-stage `Dockerfile` builds the React app and serves it from the Express server, so there is a single URL and no CORS setup.
 
-### Backend (Heroku/Railway)
-1. Deploy the Node.js application
-2. Set all environment variables
-3. Configure MongoDB connection
-4. Set up SSL certificates
+### Local production test (Docker)
+```bash
+docker build -t lernify .
+docker run -p 3000:3000 --env-file backend/.env lernify
+```
+Open http://localhost:3000 — frontend and API are served together.
+
+### Render (single web service)
+1. Push this repo to GitHub and create a **Web Service** on [Render](https://dashboard.render.com)
+2. Render auto-detects the root `Dockerfile` — keep the default start command
+3. Set environment variables:
+   - `JWT_SECRET`, `MONGODB_URI` (MongoDB Atlas), `XKIRO_API_KEY`
+   - `CLIENT_ID`, `CLIENT_SECRET` (Google OAuth)
+   - `FRONTEND_URL` and `BACKEND_URL` = your Render URL, e.g. `https://lernify.onrender.com`
+   - `NODE_ENV=production`
+   - `PORT` is injected by Render automatically
+4. In Google Cloud Console add the OAuth redirect URI: `https://<your-render-url>/api/auth/google/callback`
+
+### AI Features (xKiro)
+AI flashcards, quizzes, summaries and chat run through [xKiro](https://docs.xkiro.com) using the OpenAI-compatible API with model fallback.
 
 ## 🤝 Contributing
 
@@ -223,9 +239,9 @@ npm test         # Run tests
    - Verify network connectivity
 
 2. **Gemini API Error**
-   - Verify API key is correct
-   - Check Google Cloud project setup
-   - Ensure API is enabled
+   - Verify the `XKIRO_API_KEY` is correct
+   - Check [xKiro status/docs](https://docs.xkiro.com)
+   - Models fall back automatically if one is rate-limited
 
 3. **CORS Issues**
    - Check `FRONTEND_URL` in backend `.env`

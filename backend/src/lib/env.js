@@ -10,5 +10,6 @@ export const ENV = {
     FRONTEND_URL: process.env.FRONTEND_URL,
     BACKEND_URL: process.env.BACKEND_URL,
     OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
+    XKIRO_API_KEY: process.env.XKIRO_API_KEY,
 }
 

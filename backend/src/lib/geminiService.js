@@ -1,34 +1,30 @@
 import { ENV } from "./env.js";
 import OpenAI from "openai";
 
-if (!ENV.OPENROUTER_API_KEY) {
-  console.error("FATAL ERROR: OPENROUTER_API_KEY is missing");
+if (!ENV.XKIRO_API_KEY) {
+  console.error("FATAL ERROR: XKIRO_API_KEY is missing");
   process.exit(1);
 }
 
 
 const openai = new OpenAI({
-  baseURL: "https://openrouter.ai/api/v1",
-  apiKey: ENV.OPENROUTER_API_KEY,
-  defaultHeaders: {
-    "HTTP-Referer": ENV.BACKEND_URL,
-    "X-Title": "Lernify AI",
-  }
+  baseURL: "https://api.xkiro.com/v1",
+  apiKey: ENV.XKIRO_API_KEY,
 });
 
-const FREE_MODELS = [
+const MODELS = [
+  "qwen/qwen3.8-omni-flash:free",
   "openai/gpt-oss-120b:free",
-  "google/gemini-2.0-flash-lite-preview-02-05:free",
   "meta-llama/llama-3.3-70b-instruct:free"
 ];
 
 
-async function callOpenRouter(prompt) {
+async function callAI(prompt) {
   let lastError;
 
-  for (const modelName of FREE_MODELS) {
+  for (const modelName of MODELS) {
     try {
-      console.log(`[AI] Attempting OpenRouter stream with model: "${modelName}"`);
+      console.log(`[AI] Attempting xKiro stream with model: "${modelName}"`);
 
       const stream = await openai.chat.completions.create({
         model: modelName,
@@ -64,7 +60,7 @@ async function callOpenRouter(prompt) {
     }
   }
 
-  console.error("[AI] Fatal Error: All free models failed or are rate-limited.");
+  console.error("[AI] Fatal Error: All models failed or are rate-limited.");
   throw new Error(`Failed to generate response: ${lastError?.message}`);
 }
 
@@ -83,9 +79,9 @@ Separate flashcards with ___
 Text: ${text.slice(0, 15000)}
 `;
 
-  const output = await callOpenRouter(prompt);
+  const output = await callAI(prompt);
 
-  if (!output) throw new Error("Empty OpenRouter response");
+  if (!output) throw new Error("Empty AI response");
 
   const cards = output.split("___").map((c) => c.trim()).filter(Boolean);
   const flashcards = [];
@@ -133,9 +129,9 @@ Separate questions with ___
 Text: ${text.slice(0, 15000)}
 `;
 
-  const output = await callOpenRouter(prompt);
+  const output = await callAI(prompt);
 
-  if (!output) throw new Error("Empty OpenRouter response");
+  if (!output) throw new Error("Empty AI response");
 
   const blocks = output.split("___").map((b) => b.trim()).filter(Boolean);
   const questions = [];
@@ -182,9 +178,9 @@ Summarize the following text clearly and concisely. Use bullet points if helpful
 Text: ${text.slice(0, 20000)}
 `;
 
-  const output = await callOpenRouter(prompt, 0.5);
+  const output = await callAI(prompt, 0.5);
 
-  if (!output) throw new Error("Empty OpenRouter response");
+  if (!output) throw new Error("Empty AI response");
 
   return output.trim();
 }
@@ -195,7 +191,7 @@ export const explainConcept = async (concept, context) => {
 Context: ${context.substring(0, 10000)}`;
 
   try {
-    return await callOpenRouter(prompt, 0.5);
+    return await callAI(prompt, 0.5);
   } catch (error) {
     throw new Error("Failed to explain concept");
   }
@@ -217,7 +213,7 @@ Question: ${question}
 Answer:`;
 
   try {
-    return await callOpenRouter(prompt, 0.5);
+    return await callAI(prompt, 0.5);
   } catch (error) {
     throw new Error("Failed to generate chat response");
   }

@@ -37,22 +37,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const checkAuth = async () => {
     try {
       setIsLoading(true);
-      if (user) {
-        console.log("User already authenticated");
-      } else {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          setUser(null);
-          return;
-        }
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setUser(null);
+        return;
+      }
 
-        const response = await authService.getProfile();
-        if (response.success) {
-          setUser(response.user);
-        } else {
-          setUser(null);
-          localStorage.removeItem("token");
-        }
+      // Always fetch fresh profile (also refreshes state after Google popup login)
+      const response = await authService.getProfile();
+      if (response.success && response.user) {
+        setUser(response.user);
+      } else {
+        setUser(null);
+        localStorage.removeItem("token");
       }
     } catch (error) {
       setUser(null);

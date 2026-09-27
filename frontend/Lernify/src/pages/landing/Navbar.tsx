@@ -1,13 +1,15 @@
 import { useState, useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LayoutDashboard } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -55,10 +57,22 @@ export default function Navbar() {
             </div>
 
             <div className="hidden md:flex items-center gap-4">
-              <Link to="/login" className="text-sm font-medium text-white/80 hover:text-white transition-colors">Sign in</Link>
-              <button onClick={() => navigate("/register")} className="bg-primary hover:opacity-90 text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">
-                Sign Up
-              </button>
+              {isAuthenticated ? (
+                <button 
+                  onClick={() => navigate("/dashboard")}
+                  className="bg-primary hover:opacity-90 text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center gap-2"
+                >
+                  <LayoutDashboard size={16} />
+                  Dashboard
+                </button>
+              ) : (
+                <>
+                  <Link to="/login" className="text-sm font-medium text-white/80 hover:text-white transition-colors">Sign in</Link>
+                  <button onClick={() => navigate("/register")} className="bg-primary hover:opacity-90 text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">
+                    Sign Up
+                  </button>
+                </>
+              )}
             </div>
 
             {/* Mobile Menu Toggle */}
@@ -78,10 +92,22 @@ export default function Navbar() {
               <button onClick={() => scrollToSection('benefits')} className="text-sm font-medium text-white/80 hover:text-white transition-colors text-left">Benefits</button>
               <button onClick={() => scrollToSection('contact')} className="text-sm font-medium text-white/80 hover:text-white transition-colors text-left">Contact</button>
               <hr className="border-white/20 my-2" />
-              <Link to="/login" className="text-sm font-medium text-white/80 hover:text-white transition-colors">Sign in</Link>
-              <button onClick={() => navigate("/register")} className="bg-primary hover:opacity-90 text-primary-foreground px-5 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm w-full mt-2">
-                Sign Up
-              </button>
+              {isAuthenticated ? (
+                <button 
+                  onClick={() => { setIsMobileMenuOpen(false); navigate("/dashboard"); }}
+                  className="bg-primary hover:opacity-90 text-primary-foreground px-5 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm w-full mt-2 flex items-center justify-center gap-2"
+                >
+                  <LayoutDashboard size={16} />
+                  Dashboard
+                </button>
+              ) : (
+                <>
+                  <Link to="/login" className="text-sm font-medium text-white/80 hover:text-white transition-colors">Sign in</Link>
+                  <button onClick={() => { setIsMobileMenuOpen(false); navigate("/register"); }} className="bg-primary hover:opacity-90 text-primary-foreground px-5 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm w-full mt-2">
+                    Sign Up
+                  </button>
+                </>
+              )}
             </div>
           )}
         </header>
